@@ -1,0 +1,35 @@
+{
+  "name": "@yunyanteng/valka",
+  "version": "1.0.1",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src --out-dir lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.aonaotu.com/aotools/valka.git"
+  },
+  "publishConfig": {
+    "registry": "http://npm.aonaotu.com"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "art-template": "^4.12.2",
+    "fs-walk": "0.0.1",
+    "jsonwebtoken": "^8.1.0",
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.2.0",
+    "koa-jwt": "^3.3.0",
+    "koa-router": "^7.3.0",
+    "koa-static": "^4.0.2",
+    "koa-static-cache": "^5.1.1",
+    "mongoose": "^4.13.9"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1"
+  }
+}
