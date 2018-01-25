@@ -66,3 +66,9 @@ export class User {
   }
 }
 ```
+
+### 使用
+``` shell
+npm adduser --registry http://npm.aonaotu.com --scope=@yunyanteng
+npm install @yunyanteng/valka
+```
