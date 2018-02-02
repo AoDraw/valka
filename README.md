@@ -11,7 +11,7 @@
 
 ### Valka
 ```javascript
-import {Valka} from '@yunyanteng/valka'
+import {Valka} from 'valka'
 
 Valka({
   baseDir: __dirname,
@@ -26,7 +26,7 @@ Valka({
 
 ### Model
 ```javascript
-import { Model } from '@yunyanteng/valka'
+import { Model } from 'valka'
 
 @Model
 export default class User {
@@ -38,7 +38,7 @@ export default class User {
 
 ### Service
 ```javascript
-import {Service, AutowiredModel} from '@yunyanteng/valka'
+import {Service, AutowiredModel} from 'valka'
 
 @Service
 export class User {
@@ -53,7 +53,7 @@ export class User {
 
 ### Controller
 ```javascript
-import {Controller, AutowiredService, Get} from '@yunyanteng/valka'
+import {Controller, AutowiredService, Get} from 'valka'
 
 @Controller('/api/users')
 export class User {
@@ -69,6 +69,5 @@ export class User {
 
 ### 使用
 ``` shell
-npm adduser --registry http://npm.aonaotu.com --scope=@yunyanteng
-npm install @yunyanteng/valka
+npm i valka --save
 ```

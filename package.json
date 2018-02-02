@@ -1,17 +1,13 @@
 {
-  "name": "@yunyanteng/valka",
+  "name": "valka",
   "version": "1.0.1",
   "description": "",
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --out-dir lib"
   },
-  "repository": {
-    "type": "git",
-    "url": "http://gitlab.aonaotu.com/aotools/valka.git"
-  },
   "publishConfig": {
-    "registry": "http://npm.aonaotu.com"
+    "registry": "https://registry.npmjs.org/"
   },
   "author": "",
   "license": "ISC",
