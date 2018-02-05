@@ -71,3 +71,9 @@ export class User {
 ``` shell
 npm i valka --save
 ```
+
+## TODO
+
+1. `valka-cli` support. Easily create and bootstrap a valka project from command line.
+2. Add BDD tests.
+3. More docs.
