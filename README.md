@@ -74,6 +74,8 @@ npm i valka --save
 
 ## TODO
 
-1. `valka-cli` support. Easily create and bootstrap a valka project from command line.
+1. `valka-cli` support. Easily create and bootstrap a Valka project from command line.
 2. Add BDD tests.
-3. More docs.
+3. More documentaions.
+4. Plugins design for client side project. One can easily integrate its Vue.js or React.js project with Valka project, and `valka-cli` should have this kind of options?
+5. ...more
