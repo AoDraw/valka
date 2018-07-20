@@ -1,5 +1,4 @@
 import Koa from "koa"
-import { initModels } from "./models"
 import { initServices } from "./services"
 import { initControllers } from "./controllers"
 import koaStatic from "koa-static"
@@ -8,28 +7,21 @@ import bodyParser from "koa-bodyparser"
 import jwt from "koa-jwt"
 import jsonwebtoken from "jsonwebtoken"
 import { IRouterContext } from "koa-router"
-import { IMongoDBConfig } from "./mongodb"
+import { COOKIE_TOKEN, JWT_TOKEN } from "./constraints"
 
 const template = require("art-template")
 
-const COOKIE_TOKEN = "token"
-const JWT_TOKEN = "jwt-token"
-
-export interface IContext extends IRouterContext {
+export interface IValkaContext extends IRouterContext {
   render?: (templatePath: string, ret: any) => string
   isPage?: boolean,
   errorMessage?: string,
   stop?: boolean,
 }
 
-export interface ITokenUser {
+export interface IValkaStateUser {
   exp: number,
   iat: number,
   [key: string]: any,
-}
-
-export interface IValkaDBConfig {
-  mongodb: IMongoDBConfig
 }
 
 export interface IValkaConfig {
@@ -38,20 +30,28 @@ export interface IValkaConfig {
   templateEngine: string,
   secrect: string,
   enableAuth: boolean,
-  database?: IValkaDBConfig,
+}
+
+export interface IValkaOptionalConfig {
+  port?: number,
+  baseDir?: string,
+  templateEngine?: string,
+  secrect?: string,
+  enableAuth?: boolean,
 }
 
 const defaultConfig: IValkaConfig = {
   port: 3000,
   baseDir: ".",
-  templateEngine: "handlebars",
-  secrect: "jwt", enableAuth: false,
+  templateEngine: "art-template",
+  secrect: "jwt",
+  enableAuth: false,
 }
 
-export const Valka = async (config: IValkaConfig) => {
-  config = Object.assign({}, defaultConfig, config)
+export const Valka = async (options: IValkaOptionalConfig) => {
+  const config: IValkaConfig = Object.assign({}, defaultConfig, options)
+
   const app = new Koa()
-  await initModels(config)
   await initServices(config)
   const routes = await initControllers(config)
 
@@ -68,11 +68,10 @@ export const Valka = async (config: IValkaConfig) => {
     }))
   }
 
-  app.use(async (...args: any[]) => {
-    const ctx = args[0] as IContext
+  app.use(async (ctx: IValkaContext, ...args: any[]) => {
     try {
       if (ctx.query.jwtToken) {
-        const user = jsonwebtoken.decode(ctx.query.jwtToken) as ITokenUser
+        const user = jsonwebtoken.decode(ctx.query.jwtToken) as IValkaStateUser
         ctx.state.user = user
         const exp = new Date(user.exp * 1000)
         if (exp < new Date()) {
@@ -81,19 +80,12 @@ export const Valka = async (config: IValkaConfig) => {
           ctx.state.user = user
         }
       }
-      await routes.apply(null, args)
+      await routes.apply(null, [ctx, ...args])
     } catch (e) {
       try {
         console.log("************ERROR URL**************", ctx.req.method, ctx.req.url, ctx.request.body, e)
       } catch (e) { /* ignored */ }
-      if (e.status) {
-        ctx.status = e.status
-      } else if (e.name === "CastError") {
-        ctx.status = 404
-        e.message = "该页面不存在"
-      } else {
-        e.status = 500
-      }
+      ctx.status = e.status || 500
       ctx.errorMessage = e.message
       if (ctx.isPage) {
         errorHandle(ctx)
@@ -118,7 +110,7 @@ export const Valka = async (config: IValkaConfig) => {
     app.use(errorHandle(koaStatic(`${config.baseDir}/static`)))
   }
   function errorHandle(wrapper: any): any {
-    const handler = (ctx: IContext) => {
+    const handler = (ctx: IValkaContext) => {
       if (ctx.status !== 200) {
         ctx.body = template("error.html", {
           status: ctx.status,
@@ -127,7 +119,7 @@ export const Valka = async (config: IValkaConfig) => {
       }
     }
     if (typeof wrapper === "function") {
-      return async (ctx: IContext, ...rest: any[]) => {
+      return async (ctx: IValkaContext, ...rest: any[]) => {
         await wrapper(ctx, ...rest)
         if (ctx.message === "Not Found") {
           ctx.errorMessage = "该页面不存在"
@@ -143,9 +135,9 @@ export const Valka = async (config: IValkaConfig) => {
   })
 }
 
-const refreshToken = async (secrect: string, ctx: IContext) => {
+const refreshToken = async (secrect: string, ctx: IValkaContext) => {
   if (ctx.state.user) {
-    const user = Object.assign({}, ctx.state.user) as ITokenUser
+    const user = Object.assign({}, ctx.state.user) as IValkaStateUser
     delete user.exp
     delete user.iat
     const token = jsonwebtoken.sign(user, secrect, { expiresIn: "14d" })

@@ -20,7 +20,6 @@
     "@types/koa-router": "^7.0.30",
     "@types/koa-static": "^4.0.0",
     "@types/koa-static-cache": "^5.1.0",
-    "@types/mongoose": "^5.2.0",
     "@types/node": "^10.5.2",
     "art-template": "^4.12.2",
     "fs-walk": "0.0.1",
@@ -30,8 +29,7 @@
     "koa-jwt": "^3.3.0",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
-    "koa-static-cache": "^5.1.1",
-    "mongoose": "^4.13.9"
+    "koa-static-cache": "^5.1.1"
   },
   "devDependencies": {
     "tslib": "^1.9.3",
