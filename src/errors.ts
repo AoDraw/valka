@@ -1,0 +1,18 @@
+const ErrorHttpCode = (status: number, msg: string) =>
+  (message?: string) => ({ status, message: message || msg })
+
+export const BadRequest           = ErrorHttpCode(400, "Bad Request")
+export const Unauthorized         = ErrorHttpCode(401, "Unauthorized")
+export const Forbidden            = ErrorHttpCode(403, "Forbidden")
+export const NotFound             = ErrorHttpCode(404, "Not Found")
+export const MethodNotAllowed     = ErrorHttpCode(405, "Method Not Allowed")
+export const NotAcceptable        = ErrorHttpCode(406, "Not Acceptable")
+export const RequestTimeout       = ErrorHttpCode(408, "Request Timeout")
+export const Conflict             = ErrorHttpCode(409, "Conflict")
+export const PayloadTooLarge      = ErrorHttpCode(413, "Payload Too Large")
+export const UnsupportedMediaType = ErrorHttpCode(415, "Unsupported Media Type")
+export const InternalServerError  = ErrorHttpCode(500, "Internal Server Error")
+export const NotImplemented       = ErrorHttpCode(501, "Not Implemented")
+export const BadGateway           = ErrorHttpCode(502, "Bad Gateway")
+export const ServiceUnavailable   = ErrorHttpCode(503, "Service Unavailable")
+export const GatewayTimeout       = ErrorHttpCode(504, "Gateway Timeout")
