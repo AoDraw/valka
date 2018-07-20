@@ -3,6 +3,8 @@
 ├── server.js  
 ├── controllers  
 |   └── User.js  
+├── templates  
+|   └── index.html
 ```
 
 ### Valka
