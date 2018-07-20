@@ -1,7 +1,7 @@
 {
-  "name": "valka",
-  "version": "1.0.5",
-  "description": "",
+  "name": "@aotools/valka",
+  "version": "1.1.0",
+  "description": "``` ├── server.js   ├── controllers   |   └── User.js   ├── templates   |   └── index.html ```",
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
@@ -10,8 +10,8 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "lxzjj",
+  "license": "MIT",
   "dependencies": {
     "@types/jsonwebtoken": "^7.2.8",
     "@types/koa": "^2.0.46",
@@ -36,5 +36,16 @@
     "tslint": "^5.11.0",
     "tslint-sonarts": "^1.7.0",
     "typescript": "^2.9.2"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AoDraw/valka.git"
+  },
+  "keywords": [
+    "valka"
+  ],
+  "bugs": {
+    "url": "https://github.com/AoDraw/valka/issues"
+  },
+  "homepage": "https://github.com/AoDraw/valka#readme"
 }
