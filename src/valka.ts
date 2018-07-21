@@ -132,11 +132,13 @@ const isExpired = (user: IValkaStateUser): boolean => {
 
 const deserializeToken = (ctx: IContext) => {
   const jwtToken: string = ctx.query.jwtToken || ""
-  const user = jsonwebtoken.decode(jwtToken) as IValkaStateUser
-  if (user && isExpired(user)) {
-    ctx.state.user = null
-  } else {
-    ctx.state.user = user
+  if (jwtToken) {
+    const user = jsonwebtoken.decode(jwtToken) as IValkaStateUser
+    if (user && !isExpired(user)) {
+      ctx.state.user = user
+    } else {
+      ctx.state.user = null
+    }
   }
 }
 
