@@ -1,5 +1,6 @@
 import path from "path"
 import { IValkaMiddleware, IContext } from "./controllers"
+import logger from "./logger"
 
 const { walk } = require("fs-walk")
 
@@ -11,7 +12,7 @@ export const scanModules = async (dir: string) => new Promise((resolve, reject) 
       next()
     } else {
       const modulePath = path.resolve(baseDir, filename)
-      console.log("Scanning module:", modulePath)
+      logger.log("Scanning module:", modulePath)
       require(modulePath)
       next()
     }
@@ -24,9 +25,9 @@ export const beforeHandler = (fn: IValkaMiddleware) =>
   (target: any, name: string, descriptor: PropertyDescriptor) => {
     const handler = descriptor.value as IValkaMiddleware
     descriptor.value = async (ctx: IContext, ...args: any[]) => {
-      const ret = await fn.apply(null, [ctx, ...args])
+      const ret = await fn.apply(target, [ctx, ...args])
       if (!ctx.stop) {
-        return handler.apply(null, [ctx, ret])
+        return handler.apply(target, [ctx, ret])
       } else {
         return ret
       }
@@ -37,9 +38,9 @@ export const afterHandler = (fn: IValkaMiddleware) =>
   (target: any, name: string, descriptor: PropertyDescriptor) => {
     const handler = descriptor.value as IValkaMiddleware
     descriptor.value = async (ctx: IContext, ...args: any[]) => {
-      const ret = await handler.apply(null, [ctx, ...args])
+      const ret = await handler.apply(target, [ctx, ...args])
       if (!ctx.stop) {
-        return await fn.apply(null, [ctx, ret])
+        return await fn.apply(target, [ctx, ret])
       } else {
         return ret
       }

@@ -7,6 +7,7 @@ import koaStaticCache from "koa-static-cache"
 import koaStatic from "koa-static"
 import jsonwebtoken from "jsonwebtoken"
 import path from "path"
+import logger from "./logger"
 
 export interface IValkaConfig {
   port: number,               /* 监听端口 */
@@ -16,6 +17,7 @@ export interface IValkaConfig {
   jwtCookie: string,          /* 若开启用户授权，将会在 cookie 中设置加密串 */
   jwtHeader: string,          /* 若开启用户授权，将会在 header 中设置返回字段 */
   template: IValkaTemplate,   /* 页面渲染模板引擎 */
+  silent: boolean,            /* 是否打印日志 */
 }
 
 /* IValkaConfig 参数可选版本 */
@@ -27,6 +29,7 @@ export interface IValkaOptionalConfig {
   jwtCookie?: string,          /* 若开启用户授权，将会在 cookie 中设置加密串 */
   jwtHeader?: string,          /* 若开启用户授权，将会在 header 中设置返回字段 */
   template?: IValkaTemplate,   /* 页面渲染模板引擎 */
+  silent?: boolean,            /* 是否打印日志 */
 }
 
 const DEFAULT_CONFIG: IValkaConfig = {
@@ -37,6 +40,7 @@ const DEFAULT_CONFIG: IValkaConfig = {
   jwtCookie: "token",
   jwtHeader: "jwt-token",
   template: new ValkaArtTemplate(),
+  silent: false,
 }
 
 export interface IValkaStateUser {
@@ -53,6 +57,11 @@ export async function Valka(options: IValkaOptionalConfig) {
   /* 初始化模板引擎 */
   const templateEngine = config.template
   templateEngine.config(config)
+
+  /* 是否打印日志 */
+  if (config.silent) {
+    logger.keepSilent()
+  }
 
   const route: IValkaMiddleware = await scanControllers(config)
 
@@ -79,11 +88,11 @@ export async function Valka(options: IValkaOptionalConfig) {
 
   app.use(addErrorHandler(staticMiddleware, config))
 
-  app.listen(config.port, () => {
-    console.log(`Server started at port ${config.port}`)
+  const server = app.listen(config.port, () => {
+    logger.log(`Server started at port ${config.port}`)
   })
 
-  return app
+  return server
 }
 
 const addTokenHandler = (route: IValkaMiddleware, config: IValkaConfig) =>
@@ -103,7 +112,7 @@ const addErrorHandler = (route: IValkaMiddleware, config: IValkaConfig) =>
       await route.apply(null, [ctx, ...args])
     } catch (e) {
       try {
-        console.log("************ERROR URL**************", ctx.req.method, ctx.req.url, ctx.request.body, e)
+        logger.log("************ERROR URL**************", ctx.req.method, ctx.req.url, ctx.request.body, e)
       } catch (err) {
         /* ignored */
       }
