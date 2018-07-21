@@ -82,6 +82,8 @@ export async function Valka(options: IValkaOptionalConfig) {
   app.listen(config.port, () => {
     console.log(`Server started at port ${config.port}`)
   })
+
+  return app
 }
 
 const addTokenHandler = (route: IValkaMiddleware, config: IValkaConfig) =>
