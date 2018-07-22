@@ -27,7 +27,7 @@ export const beforeHandler = (fn: IValkaMiddleware) =>
     descriptor.value = async (ctx: IContext, ...args: any[]) => {
       const ret = await fn.apply(target, [ctx, ...args])
       if (!ctx.stop) {
-        return handler.apply(target, [ctx, ret])
+        return handler.apply(target, [ctx, ...args, ret])
       } else {
         return ret
       }
@@ -40,7 +40,7 @@ export const afterHandler = (fn: IValkaMiddleware) =>
     descriptor.value = async (ctx: IContext, ...args: any[]) => {
       const ret = await handler.apply(target, [ctx, ...args])
       if (!ctx.stop) {
-        return await fn.apply(target, [ctx, ret])
+        return await fn.apply(target, [ctx, ...args, ret])
       } else {
         return ret
       }

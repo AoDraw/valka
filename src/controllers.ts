@@ -64,8 +64,7 @@ export const wrapperHandler = (
     const instance = new ControllerClass()
 
     /* 正式执行当前实例的方法 */
-    const params = Object.values(ctx.params)
-    const ret = await handler.call(instance, ctx, ...params)
+    const ret = await handler.call(instance, ctx)
 
     const templateFile = handler.template
     const templateEngine = config.template
