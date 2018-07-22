@@ -24,10 +24,10 @@ export const scanModules = async (dir: string) => new Promise((resolve, reject) 
 export const beforeHandler = (fn: IValkaMiddleware) =>
   (target: any, name: string, descriptor: PropertyDescriptor) => {
     const handler = descriptor.value as IValkaMiddleware
-    descriptor.value = async (ctx: IContext, ...args: any[]) => {
-      const ret = await fn.apply(target, [ctx, ...args])
+    descriptor.value = async (ctx: IContext) => {
+      const ret = await fn.call(target, ctx)
       if (!ctx.stop) {
-        return handler.apply(target, [ctx, ...args, ret])
+        return await handler.call(target, ctx)
       } else {
         return ret
       }
@@ -37,10 +37,10 @@ export const beforeHandler = (fn: IValkaMiddleware) =>
 export const afterHandler = (fn: IValkaMiddleware) =>
   (target: any, name: string, descriptor: PropertyDescriptor) => {
     const handler = descriptor.value as IValkaMiddleware
-    descriptor.value = async (ctx: IContext, ...args: any[]) => {
-      const ret = await handler.apply(target, [ctx, ...args])
+    descriptor.value = async (ctx: IContext) => {
+      const ret = await handler.call(target, ctx)
       if (!ctx.stop) {
-        return await fn.apply(target, [ctx, ...args, ret])
+        return await fn.call(target, ctx)
       } else {
         return ret
       }
