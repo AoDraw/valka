@@ -30,7 +30,7 @@ export interface IValkaMiddleware extends IMiddleware {
 
 const ControllerClasses: IValkaController[] = []
 
-export const scanControllers = async (config: IValkaConfig) => {
+export const scanControllers = async (config: IValkaConfig): Promise<IValkaMiddleware> => {
   const router = new KoaRouter()
 
   /* 先扫描文件夹，找到所有需要初始化的类 */
