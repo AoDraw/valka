@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc -p ."
+    "build": "rm -rf dist && tsc -p ."
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
