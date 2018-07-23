@@ -4,4 +4,4 @@ build:
 	git commit -am 'update'
 	npm version patch
 	npm publish .
-	git push github master
+	git push origin master
