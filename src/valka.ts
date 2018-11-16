@@ -1,4 +1,4 @@
-import Koa from "koa"
+import Koa, { Middleware } from "koa"
 import { IValkaTemplate, ValkaArtTemplate } from "./template"
 import { scanControllers, IContext, IValkaMiddleware } from "./controllers"
 import bodyParser from "koa-bodyparser"
@@ -18,6 +18,7 @@ export interface IValkaConfig {
   jwtHeader: string,          /* 若开启用户授权，将会在 header 中设置返回字段 */
   template: IValkaTemplate,   /* 页面渲染模板引擎 */
   silent: boolean,            /* 是否打印日志 */
+  middlewares: Middleware[]   /* 需要加载的中间件 */
 }
 
 /* IValkaConfig 参数可选版本 */
@@ -30,6 +31,7 @@ export interface IValkaOptionalConfig {
   jwtHeader?: string,          /* 若开启用户授权，将会在 header 中设置返回字段 */
   template?: IValkaTemplate,   /* 页面渲染模板引擎 */
   silent?: boolean,            /* 是否打印日志 */
+  middlewares?: Middleware[]   /* 需要加载的中间件 */
 }
 
 const DEFAULT_CONFIG: IValkaConfig = {
@@ -41,6 +43,7 @@ const DEFAULT_CONFIG: IValkaConfig = {
   jwtHeader: "jwt-token",
   template: new ValkaArtTemplate(),
   silent: false,
+  middlewares: [],
 }
 
 export interface IValkaStateUser {
@@ -64,6 +67,10 @@ export async function Valka(options: IValkaOptionalConfig) {
   }
 
   const route: IValkaMiddleware = await scanControllers(config)
+
+  if (config.middlewares.length > 0) {
+    config.middlewares.forEach((middleware) => app.use(middleware))
+  }
 
   app.use(bodyParser({
     jsonLimit: "50mb",
