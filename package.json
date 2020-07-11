@@ -29,7 +29,8 @@
     "koa-jwt": "^3.3.0",
     "koa-router": "^7.3.0",
     "koa-static": "^4.0.2",
-    "koa-static-cache": "^5.1.1"
+    "koa-static-cache": "^5.1.1",
+    "walk-sync": "^2.2.0"
   },
   "devDependencies": {
     "tslib": "^1.9.3",

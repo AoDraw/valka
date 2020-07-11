@@ -2,23 +2,32 @@ import path from "path"
 import { IValkaMiddleware, IContext } from "./controllers"
 import logger from "./logger"
 
-const { walk } = require("fs-walk")
+// const { walk } = require("fs-walk")
+const walkSync = require("walk-sync")
 
 const isScriptFile = (file: string) => /\.(js|ts)$/i.test(file)
 
 export const scanModules = async (dir: string) => new Promise((resolve, reject) => {
-  walk(dir, (baseDir: string, filename: string, state: any, next: () => void) => {
-    if (!state.isFile() || !isScriptFile(filename)) {
-      next()
-    } else {
-      const modulePath = path.resolve(baseDir, filename)
-      logger.log("Scanning module:", modulePath)
-      require(modulePath)
-      next()
-    }
-  }, (error: Error) => {
-    error ? reject(error) : resolve()
-  })
+  const paths = walkSync(dir)
+  for (const p of paths) {
+    if (!isScriptFile(p)) { continue }
+    const modulePath = path.resolve(dir, p)
+    logger.log("Scanning module:", modulePath)
+    require(modulePath)
+  }
+  resolve()
+  // walk(dir, (baseDir: string, filename: string, state: any, next: () => void) => {
+  //   if (!state.isFile() || !isScriptFile(filename)) {
+  //     next()
+  //   } else {
+  //     const modulePath = path.resolve(baseDir, filename)
+  //     logger.log("Scanning module:", modulePath)
+  //     require(modulePath)
+  //     next()
+  //   }
+  // }, (error: Error) => {
+  //   error ? reject(error) : resolve()
+  // })
 })
 
 export const beforeHandler = (fn: IValkaMiddleware) =>
