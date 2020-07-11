@@ -5,3 +5,6 @@ build:
 	npm version patch
 	npm publish .
 	git push origin master
+link:
+	npm run build
+	npm link
