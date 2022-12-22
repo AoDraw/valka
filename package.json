@@ -23,7 +23,7 @@
     "@types/node": "^10.5.2",
     "art-template": "^4.12.2",
     "fs-walk": "0.0.1",
-    "jsonwebtoken": "^8.1.0",
+    "jsonwebtoken": "^9.0.0",
     "koa": "^2.4.1",
     "koa-bodyparser": "^4.2.0",
     "koa-jwt": "^3.3.0",
